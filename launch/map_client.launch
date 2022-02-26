@@ -1,0 +1,38 @@
+<launch>
+  <arg name="map_id" default="-1" />
+  <arg name="saving_folder" default="/tmp/motivedge_map" />
+  <arg name="lidar_height" default="0" />
+
+  <arg name="meta_fpath_hz" default="1" />
+  <arg name="meta_fpath_topic" default="/metapoints_filepath" />
+
+  <node pkg="motivedge_ros" type="map_download.py" name="me_map_download">
+    <param name="map_id" value="$(arg map_id)" />
+    <param name="saving_folder" value="$(arg saving_folder)" />
+    <param name="lidar_height" value="$(arg lidar_height)" />
+  </node>
+
+  <!--
+  We are not trying to create our map_server node to publish data.
+  Since we already have the map yaml and costmap after downloading,
+  `map_server` will provide the best and stable services which we like.
+
+  But since we are downloading from remote, it may take time to download.
+  The `map_server` could say "Map_server could not open map.yaml" error.
+  It's fine since we are not updating the code of `map_server` to wait
+  map API until map arrives.
+  -->
+
+  <arg name="map_topic" default="/map" />
+  <arg name="map_metadata_topic" default="/map_metadata" />
+
+  <!-- `respawn` helps us to run `map_server` restart if map doesn't exist yet.
+  `launch-prefix` with `sleep` makes the running script after 3 seconds-->
+  <node name="map_server" pkg="map_server" type="map_server"
+        args="$(arg saving_folder)/maps/map.yaml" respawn="true"
+        launch-prefix="bash -c 'sleep 3.0; $0 $@' ">
+    <remap from="/map" to="$(arg map_topic)"/>
+    <remap from="/map_metadata" to="$(arg map_metadata_topic)"/>
+  </node>
+
+</launch>
