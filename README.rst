@@ -19,11 +19,11 @@ Installation
 
    mkdir -p catkin_ws/src
    cd catkin_ws/src
-   git clone https://github.com/motivedge/motivedge_ros
+   git clone https://github.com/motivedge/motivedge_ros.git
    cd motivedge_ros
    pip3 install -r requirements.txt
    cd ../..
-   catkin_make
+   catkin build motivedge_ros # OR catkin_make
    source devel/setup.sh
 
 How to use
@@ -64,6 +64,9 @@ Published Topics
   Other nodes could get the path and use :code:`motivedge.Client.read_mark_points`
   method to read the data inside. Then, clients could save data into database
   or directly publish to robot.
+
+  For costmap generated from 3D map, there is no :code:`metadata.yaml` file.
+  This topic will publish **empty string**.
 
 * :code:`/map_metadata`: :code:`nav_msgs/MapMetaData`, published from :code:`map_server`. It includes the map
   yaml file content. Details please check :code:`map_server` page, `here <http://wiki.ros.org/map_server>`_
