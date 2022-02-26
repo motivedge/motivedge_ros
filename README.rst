@@ -41,7 +41,7 @@ How to use
 
    .. code:: bash
 
-       roslaunch motivedge_ros map_client.launch map_id:=1
+       roslaunch motivedge_ros map_client.launch map_id:=<MAP_ID>
 
 How it works
 ============
